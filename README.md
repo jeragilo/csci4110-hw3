@@ -41,7 +41,7 @@ The emphasis is on **performance-aware system design**, not merely functional co
 ---
 
 ## Repository Structure
-
+```
 .
 ├── particle_simulation.cu # CUDA implementation of particle simulation
 ├── serial.cu # Serial CPU baseline implementation
@@ -55,7 +55,7 @@ The emphasis is on **performance-aware system design**, not merely functional co
 ├── gen_gpusum.py # Helper scripts for analysis
 ├── report.pdf # Final report with methodology and results
 └── README.md
-
+```
 
 ---
 
