@@ -82,7 +82,7 @@ sbatch job-bridges-serial
 sbatch job-bridges-gpu
 Refer to the provided job-bridges-* scripts for exact resource allocation
 and execution details.
-
+```
 Performance Results (Summary)
 The CUDA implementation achieves a clear performance improvement
 over the serial CPU baseline for sufficiently large problem sizes.
