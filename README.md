@@ -27,6 +27,13 @@ This project explores how a particle simulation can be **accelerated using CUDA*
 
 The emphasis is on **performance-aware system design**, not merely functional correctness.
 
+## Why This Matters
+
+GPU acceleration is foundational to modern scientific computing, machine learning,
+and simulation-based research. This project demonstrates practical CUDA development
+skills and performance reasoning that transfer directly to real-world
+performance-critical systems.
+
 ---
 
 ## What This Project Demonstrates
@@ -101,6 +108,15 @@ Outputs were validated against reference implementations
 Automated correctness checks were used to ensure numerical accuracy
 
 Performance measurements were collected only after correctness was confirmed
+
+## Skills Demonstrated
+
+- CUDA C/C++
+- GPU parallelization
+- Performance benchmarking
+- SLURM job scheduling
+- Supercomputing workflows
+- Systems-level performance analysis
 
 Environment
 Languages: CUDA C/C++, C++, Python
