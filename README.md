@@ -1,156 +1,125 @@
-# CUDA-Accelerated Particle Simulation (HPC Project)
+# CUDA-Accelerated Particle Simulation
 
-This repository implements and benchmarks a **particle simulation accelerated with CUDA**,
-focusing on **GPU parallelization, memory access patterns, and performance scaling**
-relative to a serial CPU baseline.
+A high-performance computing project that implements a particle simulation in **CUDA C/C++** and compares GPU execution with a serial CPU baseline.
 
-The project was developed and evaluated on the **Bridges2 supercomputer**
-as part of advanced high-performance computing coursework and is presented here as a
-**standalone systems and GPU programming portfolio project** suitable for
-research-oriented and performance-critical engineering roles.
+The project was developed and evaluated on the **Bridges2 supercomputer** and focuses on practical GPU programming, correctness validation, SLURM-based execution, and performance analysis.
 
----
+## Project Goals
 
-## Overview
+The repository explores a central HPC question: how effectively can a particle-based workload be parallelized on a GPU relative to serial execution?
 
-Particle simulations are a common workload in scientific computing, physics,
-and engineering applications. As problem sizes grow, purely serial CPU
-implementations become a performance bottleneck.
+The implementation focuses on:
 
-This project explores how a particle simulation can be **accelerated using CUDA** by:
+- parallelizing particle computations with CUDA kernels;
+- comparing GPU and serial CPU implementations;
+- reasoning about memory access and GPU execution behavior;
+- validating numerical correctness before benchmarking;
+- executing experiments through SLURM on Bridges2; and
+- analyzing performance as workload size changes.
 
-- Parallelizing per-particle computations on the GPU
-- Managing memory layout and access patterns efficiently
-- Comparing performance against a serial CPU implementation
-- Validating correctness using automated tools and reference outputs
-- Running experiments on a production **supercomputing environment (Bridges2)**
+## Technology Stack
 
-The emphasis is on **performance-aware system design**, not merely functional correctness.
+| Area | Technologies |
+|---|---|
+| GPU programming | CUDA C/C++ |
+| CPU baseline | C/C++ |
+| Build system | Make |
+| HPC scheduler | SLURM |
+| Compute environment | Bridges2 Supercomputer |
+| Analysis utilities | Python |
 
-## Why This Matters
+## Repository Contents
 
-GPU acceleration is foundational to modern scientific computing, machine learning,
-and simulation-based research. This project demonstrates practical CUDA development
-skills and performance reasoning that transfer directly to real-world
-performance-critical systems.
+The repository contains the actual CUDA implementation, serial/reference implementations, shared utilities, validation tooling, SLURM job scripts, and the original experimental report.
 
----
-
-## What This Project Demonstrates
-
-- CUDA kernel design and GPU parallelization strategies
-- Serial CPU vs parallel GPU benchmarking
-- Memory-access considerations in particle-based simulations
-- Correctness verification using automated grading and reference outputs
-- Execution on a production supercomputing environment (Bridges2 / SLURM)
-- Practical performance analysis grounded in real measurements
-
----
-
-## Repository Structure
-```
-.
-├── particle_simulation.cu # CUDA implementation of particle simulation
-├── serial.cu # Serial CPU baseline implementation
-├── cuda_serial.cpp # CPU reference implementation
-├── common.cu # Shared CUDA utilities
-├── common.h # Shared headers
-├── autograder.cu # Correctness verification tooling
-├── Makefile # Build configuration
-├── job-bridges-gpu # SLURM job script for GPU execution
-├── job-bridges-serial # SLURM job script for serial execution
-├── gen_gpusum.py # Helper scripts for analysis
-├── report.pdf # Final report with methodology and results
+```text
+cuda-particle-simulation-hpc/
+├── gpu.cu
+├── cuda_serial.cpp
+├── common.cu
+├── common.h
+├── autograder.cu
+├── Makefile
+├── job-bridges-gpu
+├── job-bridges-serial
+├── auto-bridges-gpu
+├── gen_gpusum.py
+├── Homework 3_ Parallelizing a Particle Simulation REPORT (1).pdf
 └── README.md
 ```
 
----
+## Implementation
 
-## Build Instructions
+### GPU Version
 
-### Local Build (CUDA-enabled environment)
+`gpu.cu` contains the CUDA implementation of the particle simulation. Particle-level work is mapped onto GPU execution so that many particle computations can proceed in parallel.
 
-Ensure that CUDA is properly installed and accessible.
+### CPU / Reference Version
+
+The repository includes CPU/reference code used to establish expected behavior and provide a comparison point for the GPU implementation.
+
+### Correctness Validation
+
+Correctness is treated separately from speed. The repository includes validation/autograding utilities so that output can be checked before interpreting timing results.
+
+This distinction is important in performance engineering: an implementation is only meaningfully faster if it still produces valid results.
+
+## Build
+
+A CUDA-capable environment with `nvcc` is required.
 
 ```bash
 make
-This builds executables for both the serial CPU and CUDA GPU implementations.
-
-Running the Simulation
-Run Locally
-./serial
-./gpu
-Run on Bridges2 (SLURM)
-The project was executed on the Bridges2 supercomputer using batch job scripts.
-
-Example usage:
-
-sbatch job-bridges-serial
-sbatch job-bridges-gpu
-Refer to the provided job-bridges-* scripts for exact resource allocation
-and execution details.
 ```
-Performance Results (Summary)
-The CUDA implementation achieves a clear performance improvement
-over the serial CPU baseline for sufficiently large problem sizes.
 
-Speedup increases with problem scale, consistent with GPU parallelism benefits.
+The included `Makefile` defines the project build targets.
 
-Correctness was validated prior to benchmarking using automated tools.
+## Running on Bridges2
 
-Detailed methodology, plots, and analysis are provided in the final report.
+The repository includes separate SLURM job scripts for GPU and serial execution.
 
-📄 See report.pdf for full experimental details and performance analysis.
+```bash
+sbatch job-bridges-gpu
+sbatch job-bridges-serial
+```
 
-Correctness and Validation
-Outputs were validated against reference implementations
+These scripts capture the HPC execution workflow used for the project rather than presenting the code only as a local demonstration.
 
-Automated correctness checks were used to ensure numerical accuracy
+## Performance Interpretation
 
-Performance measurements were collected only after correctness was confirmed
+The experiments compare serial CPU and CUDA GPU execution and examine how the usefulness of GPU parallelism changes with problem scale.
+
+The project report contains the detailed measurements and analysis. The main qualitative observation is that GPU acceleration becomes more useful as sufficient parallel work is available to offset GPU execution and data-management overhead.
+
+I intentionally do not report a single universal speedup value here because performance depends on workload size and experimental configuration. The original report in this repository contains the measured results for the tested configurations.
 
 ## Skills Demonstrated
 
-- CUDA C/C++
+- CUDA kernel development
+- C/C++ systems programming
 - GPU parallelization
-- Performance benchmarking
-- SLURM job scheduling
+- CPU-vs-GPU benchmarking
+- Performance reasoning
+- Numerical correctness validation
+- SLURM batch scheduling
 - Supercomputing workflows
-- Systems-level performance analysis
+- Reproducible experimental reporting
 
-Environment
-Languages: CUDA C/C++, C++, Python
+## Scope and Limitations
 
-Build System: Make
+This project originated in advanced HPC coursework and is presented as a focused GPU-programming and performance-analysis portfolio project.
 
-Compute Platform: Bridges2 Supercomputer (GPU nodes)
+It does not claim:
 
-Execution Model: Serial CPU vs CUDA GPU
+- production-level optimization for every GPU architecture;
+- universal speedup across particle-simulation workloads; or
+- that GPU execution is automatically advantageous at every problem size.
 
-Scheduler: SLURM
+Instead, it demonstrates the engineering workflow of implementing, validating, executing, and analyzing a parallel scientific workload on real HPC infrastructure.
 
-Notes on Scope
-This project focuses on GPU acceleration and performance analysis.
-It does not attempt to:
+## Author
 
-Claim production-level tuning beyond coursework scope
+**Jesús Gil**  
+Computer Science · Applied Mathematics · Quantum Computing · Machine Learning · HPC
 
-Generalize results to all particle simulation workloads
-
-Present theoretical speedup without empirical validation
-
-The goal is to demonstrate sound GPU programming practices,
-performance reasoning, and system-level thinking.
-
-Author
-Jesus Gil
-
-This project is part of a broader portfolio that includes:
-
-Research-grade work in hybrid quantum machine learning
-
-Applied machine learning systems
-
-Frontend and full-stack system design
-
-Blockchain-based security architectures
+[GitHub](https://github.com/jeragilo) · [LinkedIn](https://www.linkedin.com/in/jesusrgil)
